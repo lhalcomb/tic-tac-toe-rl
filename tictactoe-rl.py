@@ -24,7 +24,7 @@ class Player(Enum):
     CROSS = 1
     NOUGHT = 2
 
-# I like to print all of my constants at the top. B/c once upon a time I learned C.
+# I like to instantiate all of my constants at the top. B/c once upon a time I learned C.
 ############ CONSTANTS ############
 SIZE = 3
 # Winning patterns encoded in bit patterns.
@@ -47,16 +47,19 @@ def bits_of(mask: int):
         mask = mask ^ low   # resumes here on the *next* call
 
 class Environment:
-    def __init__(self): 
-
-        self.cross: int = 0   # bitmask of X positions
-        self.nought: int = 0  # bitmask of O positions
-
+    def __init__(self, player_x, player_o):
+        self.cross: int = 0
+        self.nought: int = 0
         self.bitboards = [self.cross, self.nought]
         self.turn = Player.CROSS
-
         self.grid = [Player.EMPTY] * (SIZE * SIZE)
-    
+
+        self.players = {
+            Player.CROSS: player_x,
+            Player.NOUGHT: player_o,
+        }
+        
+
     def __str__(self) -> str:
         return self.render(self.cross, self.nought)
 
@@ -141,27 +144,84 @@ class Environment:
                 s  += "|"
             elif i < ((SIZE ** 2) - 1):
                 s  += "\n-----\n"
-        return s 
+        return s
+
+    def run(self):
+        print("Welcome to Tic-Tac-Toe!")
+        print("Select a position on the board to place piece (1-9)")
+        print(self.render(0, 0))
+
+        while True:
+            player = self.players[self.turn]
+            pos = player.get_move(self)
+            try:
+                self.place_piece(pos)
+            except ValueError as e:
+                print(f"Invalid move: {e}")
+                continue
+
+            print(self.render(self.cross, self.nought))
+
+            if self.is_win(self.cross):
+                print("Cross won! Congrats.")
+                break
+            elif self.is_win(self.nought):
+                print("Nought won! Yay.")
+                break
+            elif self.is_draw():
+                print("Draw. Must've had optimal gameplay. Nerds...")
+                break
+
+############ Agents #############
+class HumanPlayer:
+    def get_move(self, env) -> int:
+        while True:
+            try:
+                pos = int(input(f"{SYMBOLS[env.turn]} turn - place piece: "))
+            except ValueError:
+                print("Please enter a valid number.")
+                continue
+            return pos - 1
+
+class RandomPlayer:  # placeholder 
+    def get_move(self, env) -> int:
+        import random
+        pos = random.choice(env.valid_moves()) 
+        print(f"{SYMBOLS[env.turn]} turn - place piece:  ", pos)
+        return pos - 1
     
-class Agent: 
+class AgentPlayer: 
+
+    """ 
+    This class contains the value and policy iteration logic for the tic-tac-toe agent. 
+
+    """
     def __init__(self):
         pass
+    
+    def get_move(self, env) -> int: 
+        return 0
 
 if __name__ == "__main__":
-    env = Environment()
-    
-    possible_states = env.generate_states()
-    
-    print(len(possible_states))
+    hp = HumanPlayer(); rp = RandomPlayer()
+    env = Environment(hp, rp)
+    env.run()
 
-    for x in possible_states:
-        env.cross, env.nought = x
+
+
+    # possible_states = env.generate_states()
+    
+    # print(len(possible_states))
+
+    # for x in possible_states:
+    #     env.cross, env.nought = x
         
-        if ((env.cross | env.nought) == FULL_BOARD):
-            print(env)
-            print()
-        elif env.is_win(env.cross) or env.is_win(env.nought):
+    #     if ((env.cross | env.nought) == FULL_BOARD):
+    #         print(env)
+    #         print()
+    #     elif env.is_win(env.cross) or env.is_win(env.nought):
             
-            print(env)
-            print()
+    #         print(env)
+    #         print()
+    
     
