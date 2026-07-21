@@ -1,50 +1,5 @@
-
-"""
-Implementation of RL-Agents playing Tic-Tac-Toe 
-
-
-RL algorithms utilized: 
-    - Policy & Value Iteration
-    - Q-Learning
-    - MCTS
-
-Sources: 
-    - https://github.com/bsamseth/tic-tac-toe/blob/master/tictactoe.py
-    - Russell, S. J., and Peter Norvig. Artificial Intelligence: A Modern Approach. 4th ed., Pearson, 2020.
-    - Sutton, Richard S., and Andrew G. Barto. Reinforcement Learning: An Introduction. 2nd ed., The MIT Press, 2018.
-    - https://huggingface.co/learn/deep-rl-course
-
-"""
-from enum import Enum
+from utils import Player, SIZE, WINNING_PATTERNS, FULL_BOARD, SYMBOLS, bits_of
 from collections import deque 
-
-########## ENUMS/STRUCTS ##########
-class Player(Enum):
-    EMPTY = 0
-    CROSS = 1
-    NOUGHT = 2
-
-# I like to instantiate all of my constants at the top. B/c once upon a time I learned C.
-############ CONSTANTS ############
-SIZE = 3
-# Winning patterns encoded in bit patterns.
-# E.g. three in a row in the top row is
-#   448 = 0b111000000
-WINNING_PATTERNS = [
-        448, 56, 7,   # Rows
-        292, 146, 73, # Columns
-        273, 84       # Diagonals
-]
-FULL_BOARD = 0b111111111
-
-SYMBOLS = {Player.EMPTY: ".", Player.CROSS: "X", Player.NOUGHT: "O"}
-
-############ Helper Functions ############
-def bits_of(mask: int):
-    while mask:
-        low = mask & -mask
-        yield low     # pause here, hand back `low`, remember where we are
-        mask = mask ^ low   # resumes here on the *next* call
 
 class Environment:
     def __init__(self, player_x, player_o):
@@ -203,25 +158,13 @@ class AgentPlayer:
         return 0
 
 if __name__ == "__main__":
+    # Human VS Random
     hp = HumanPlayer(); rp = RandomPlayer()
     env = Environment(hp, rp)
     env.run()
 
 
 
-    # possible_states = env.generate_states()
     
-    # print(len(possible_states))
-
-    # for x in possible_states:
-    #     env.cross, env.nought = x
-        
-    #     if ((env.cross | env.nought) == FULL_BOARD):
-    #         print(env)
-    #         print()
-    #     elif env.is_win(env.cross) or env.is_win(env.nought):
-            
-    #         print(env)
-    #         print()
     
     
