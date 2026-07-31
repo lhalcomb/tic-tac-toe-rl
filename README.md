@@ -3,7 +3,7 @@
 Applying reinforcement learning theory to the game of Tic-Tac-Toe.
 
 The board is represented as a pair of 9-bit bitboards (one per player), with
-game rules, state generation, and the play loop handled by an `Environment`
+game rules, state generation, and the play loop handled by the `Environment`
 class. Players — human or agent — are pluggable, so any combination of
 human-vs-human, human-vs-agent, or agent-vs-agent play is possible.
 
