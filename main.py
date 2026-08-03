@@ -1,4 +1,4 @@
-from agents.agents import AgentPlayer, RandomPlayer, HumanPlayer
+from agents.agents import RandomPlayer, HumanPlayer
 from engine import Environment
 
 

@@ -127,14 +127,14 @@ class Environment:
                 print("Draw. Must've had optimal gameplay. Nerds...")
                 break
 
-
-
 if __name__ == "__main__":
     # Human VS Random
     from agents.agents import HumanPlayer, RandomPlayer
     hp = HumanPlayer(); rp = RandomPlayer()
     env = Environment(hp, rp)
     env.run()
+
+    
 
 
 

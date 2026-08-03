@@ -1,6 +1,12 @@
-from utils import SYMBOLS
+from utils import SYMBOLS, Player
 
-############ Agents #############
+############ Agents Controller Classes #############
+
+"""
+
+These control the different agent player logic across the rl algorithms and gameplay.
+
+"""
 class HumanPlayer:
     def get_move(self, env) -> int:
         while True:
@@ -16,16 +22,27 @@ class RandomPlayer:  # placeholder
         import random
         pos = random.choice(env.valid_moves()) 
         print(f"{SYMBOLS[env.turn]} turn - place piece:  ", pos)
-        return pos - 1
-    
-class AgentPlayer: 
+        return pos
 
-    """ 
-    This class contains the value and policy iteration logic for the tic-tac-toe agent. 
-
-    """
-    def __init__(self):
+class MiniMaxPlayer:
+    def __init__(self): 
         pass
-    
-    def get_move(self, env) -> int: 
+
+    def get_move(self, env) -> int:
         return 0
+
+class PolicyPlayer:
+    def __init__(self, policy: dict, agent: Player):
+        self.policy = policy
+        self.agent = agent
+
+    def get_move(self, env) -> int:
+        state = (env.cross, env.nought, SYMBOLS[env.turn])
+        action_mask = self.policy[state]
+        pos = action_mask.bit_length() - 1
+        print(pos)
+        assert pos in env.valid_moves(), (
+            f"illegal move: state={state}, action_mask={action_mask}, pos={pos}, "
+            f"valid={env.valid_moves()}"
+        )
+        return pos

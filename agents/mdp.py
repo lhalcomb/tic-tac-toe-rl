@@ -1,14 +1,13 @@
 import sys
 sys.path.append("/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl")
-from utils import Player, SIZE, WINNING_PATTERNS, FULL_BOARD, SYMBOLS, bits_of, to_relative, hamWeight
+from utils import Player, WINNING_PATTERNS, FULL_BOARD, SYMBOLS, bits_of,hamWeight
 from collections import deque
-
 
 ### Type Alias' ###
 type State = tuple[int, int, str]
 
 class MDP:
-    def __init__(self, agent: Player = Player.CROSS, gamma=1.0):
+    def __init__(self, agent: Player = Player.CROSS, gamma: float = 0.95):
         self.agent = agent
         self.opponent = Player.NOUGHT if agent is Player.CROSS else Player.CROSS
         self.gamma = gamma
