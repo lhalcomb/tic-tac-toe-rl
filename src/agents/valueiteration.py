@@ -1,8 +1,8 @@
-from mdp import MDP, State, SYMBOLS, Player, WINNING_PATTERNS, hamWeight
+from .mdp import MDP, State, SYMBOLS, Player, WINNING_PATTERNS, hamWeight
 
 class ValueIteration(MDP):
-    def __init__(self, eps: float = 10e-6):
-        super().__init__()
+    def __init__(self, agent: Player = Player.CROSS, eps: float = 10e-6):
+        super().__init__(agent)
         self.get_states()
         self.eps = eps
         self.V: dict[State, float]  = {state: 0 for state in self._states} # initialize every value at every state to 0
@@ -34,7 +34,8 @@ class ValueIteration(MDP):
             new_values = {}
             for state in self._states:
                 new_values[state] = self.bellman_update(state, self.V)
-            if max(abs(new_values[s] - self.V[s]) for s in self._states) < self.eps:
+            delta = max(abs(new_values[s] - self.V[s]) for s in self._states)
+            if delta < self.eps:
                 self.V = new_values
                 break
             self.V = new_values

@@ -1,4 +1,4 @@
-from utils import Player, SIZE, WINNING_PATTERNS, FULL_BOARD, SYMBOLS, bits_of
+from utils.utility import Player, SIZE, WINNING_PATTERNS, FULL_BOARD, SYMBOLS, bits_of
 from collections import deque 
 
 class Environment:
@@ -129,7 +129,7 @@ class Environment:
 
 if __name__ == "__main__":
     # Human VS Random
-    from agents.agents import HumanPlayer, RandomPlayer
+    from src.agents.players import HumanPlayer, RandomPlayer
     hp = HumanPlayer(); rp = RandomPlayer()
     env = Environment(hp, rp)
     env.run()

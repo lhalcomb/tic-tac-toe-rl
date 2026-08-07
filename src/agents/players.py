@@ -1,12 +1,8 @@
-from utils import SYMBOLS, Player
+from utils.utility import SYMBOLS, Player
 
-############ Agents Controller Classes #############
+############ Agents Controller Classes ############
+#These control the different agent player logic across the rl algorithms and gameplay.
 
-"""
-
-These control the different agent player logic across the rl algorithms and gameplay.
-
-"""
 class HumanPlayer:
     def get_move(self, env) -> int:
         while True:
