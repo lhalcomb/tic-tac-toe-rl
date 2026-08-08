@@ -33,7 +33,7 @@ if __name__ == "__main__":
     # print(f"Losses: {losses}")
 
     hp = HumanPlayer()
-    vp = load_policy_player("/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl/src/policies/valueiteration_X.json")
-    pp = load_policy_player("/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl/src/policies/policyiteration_X.json")
-    env = Environment(pp, hp)
+    vp = load_policy_player("/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl/policies/valueiteration_X.json")
+    pp = load_policy_player("/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl/policies/policyiteration_O.json")
+    env = Environment(hp, pp)
     env.run()
