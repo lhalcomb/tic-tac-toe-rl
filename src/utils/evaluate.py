@@ -1,5 +1,5 @@
 from src.engine import Environment
-from utils.utility import Player
+from src.utils.utility import Player
 
 class PolicyEvaluator:
     def __init__(self, agent_player, opponent_player, agent_symbol: Player):

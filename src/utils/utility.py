@@ -1,6 +1,5 @@
 ### Utilities used in the tic tac toe logic ###
-import json
-import os
+import json, os
 from enum import Enum
 
 ########## ENUMS/STRUCTS ##########
@@ -42,42 +41,51 @@ def hamWeight(bitboard: int) -> int:
         count += 1
     return count
 
-def _encode_state(state: tuple) -> list: # json doesn't like tuples. 
+def _encode_state(state: tuple) -> str: # json doesn't like tuples. 
     (X_mask, O_mask, turn) = state
-    return [list(state), f"{X_mask},{O_mask},{turn}"]
+    return f"{X_mask},{O_mask},{turn}"
 
-def _decode_state(state: list) -> tuple:
-    return tuple(state[0])
+def _decode_state(state: str) -> tuple:
+    return tuple((int(x) if x.strip().isdigit() else x.strip() for x in state.split(",")))
 
 ############ Save/Load Policy ############
 
 RV_SYMBOLS = {v: k for k, v in SYMBOLS.items()}
 
 def save_policy(policy: dict, agent: Player, algo: str, gamma: float, eps: float, path: str):
-    """
-    eg. use in Trainer(...) - save_policy(self.policy, self.agent, self.mdp_algo, VI.gamma, VI.eps,
-            path=f"policies/{self.mdp_algo.lower()}_{SYMBOLS[self.agent]}.json")
+    encoded_policy = {}
+    
+    for (state, action) in policy.items():
+        encoded_state = _encode_state(state)
+        encoded_policy[encoded_state] = action
 
-    Wrap policy + metadata into one JSON-serializable dict and write it.
-    - encode every key in `policy` via _encode_state
-    - build the wrapper: {"agent": ..., "mdp_algo": ..., "gamma": ...,
-      "eps": ..., "policy": {...}}
-    - os.makedirs(os.path.dirname(path), exist_ok=True) so policies/
-      doesn't need to exist beforehand
-    - json.dump(..., f) — consider indent=2 for readability since you
-      wanted this human-inspectable
-    """
-    pass
+    data = {
+        "agent": SYMBOLS[agent],
+        "mdp_algo": algo,
+        "gamma": gamma,
+        "eps": eps,
+        "policy": encoded_policy,
+    }
+
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
 
 def load_policy(path: str) -> dict:
-    """
-    Read the JSON file back, decode every key in the "policy" sub-dict
-    via _decode_state, and return the FULL wrapper dict (not just the
-    policy) — main.py will want agent/mdp_algo/gamma/eps too, not just
-    the raw policy mapping. Caller does result["policy"] if they just
-    want the moves.
-    """
-    return {}
+    with open(path, "r") as f:
+        data = json.load(f)
+
+    decoded_policy = {}
+    for (key_str, action) in data["policy"].items():
+        decoded_state = _decode_state(key_str)
+        decoded_policy[decoded_state] = action
+
+    agent = RV_SYMBOLS[data["agent"]]
+
+    data["policy"] = decoded_policy
+    data["agent"] = agent
+
+    return data
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-from utils.utility import Player, SIZE, WINNING_PATTERNS, FULL_BOARD, SYMBOLS, bits_of
+from src.utils.utility import Player, SIZE, WINNING_PATTERNS, FULL_BOARD, SYMBOLS, bits_of
 from collections import deque 
 
 class Environment:

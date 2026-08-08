@@ -1,4 +1,4 @@
-from utils.utility import SYMBOLS, Player
+from src.utils.utility import SYMBOLS, Player
 
 ############ Agents Controller Classes ############
 #These control the different agent player logic across the rl algorithms and gameplay.

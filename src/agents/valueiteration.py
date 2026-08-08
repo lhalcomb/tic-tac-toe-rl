@@ -1,4 +1,4 @@
-from .mdp import MDP, State, SYMBOLS, Player, WINNING_PATTERNS, hamWeight
+from src.agents.mdp import MDP, State, SYMBOLS, Player, WINNING_PATTERNS, hamWeight
 
 class ValueIteration(MDP):
     def __init__(self, agent: Player = Player.CROSS, eps: float = 10e-6):

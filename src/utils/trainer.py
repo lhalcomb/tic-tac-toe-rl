@@ -1,7 +1,7 @@
-from utils.utility import Player, SYMBOLS, save_policy
-from agents.players import RandomPlayer, PolicyPlayer
-from agents.valueiteration import ValueIteration
-from agents.policyiteration import PolicyIteration
+from src.utils.utility import Player, SYMBOLS, save_policy
+from src.agents.players import RandomPlayer, PolicyPlayer
+from src.agents.valueiteration import ValueIteration
+from src.agents.policyiteration import PolicyIteration
 from .evaluate import PolicyEvaluator
 
 
@@ -33,17 +33,17 @@ class Trainer:
 if __name__ == "__main__":
 
     #Test VI
-    # trainVI = Trainer(Player.CROSS, "ValueIteration")
-    # VIpolicy = trainVI.train()
-    # policyPlayerVI = PolicyPlayer(VIpolicy, trainVI.agent); rand = RandomPlayer()
-    # evaluator = PolicyEvaluator(policyPlayerVI, rand, trainVI.agent)
-    # results = evaluator.run_simulation()
-    # print(results)
-    # assert results["loss"] == 0, f"Optimal policy should never lose, but lost {results['loss']} times"
+    trainVI = Trainer(Player.CROSS, "ValueIteration")
+    VIpolicy = trainVI.train()
+    policyPlayerVI = PolicyPlayer(VIpolicy, trainVI.agent); rand = RandomPlayer()
+    evaluator = PolicyEvaluator(policyPlayerVI, rand, trainVI.agent)
+    results = evaluator.run_simulation()
+    print(results)
+    assert results["loss"] == 0, f"Optimal policy should never lose, but lost {results['loss']} times"
 
     #Test PI
-    trainPI = Trainer(Player.CROSS, "PolicyIteration")
-    PIpolicy = trainPI.train()
+    trainPI = Trainer(Player.NOUGHT, "PolicyIteration")
+    PIpolicy = trainPI.train(True)
     policyPlayerPI = PolicyPlayer(PIpolicy, trainPI.agent); rand = RandomPlayer()
     evaluator = PolicyEvaluator(policyPlayerPI, rand, trainPI.agent)
     results = evaluator.run_simulation()

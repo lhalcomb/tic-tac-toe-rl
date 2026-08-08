@@ -1,4 +1,4 @@
-from .mdp import MDP, State, Player
+from src.agents.mdp import MDP, State, Player
 
 class PolicyIteration(MDP):
     def __init__(self, agent: Player = Player.CROSS, eps: float = 10e-6, max_iterations=100):
