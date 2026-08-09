@@ -1,3 +1,4 @@
+from src.agents.minimax import MiniMax
 from src.utils.utility import SYMBOLS, Player
 
 ############ Agents Controller Classes ############
@@ -21,11 +22,15 @@ class RandomPlayer:  # placeholder
         return pos
 
 class MiniMaxPlayer:
-    def __init__(self): 
-        pass
+    def __init__(self, agent): 
+        self.agent = agent
+        self.minimax = MiniMax(agent)
 
     def get_move(self, env) -> int:
-        return 0
+        state = (env.cross, env.nought, SYMBOLS[env.turn])
+        action_mask = self.minimax.get_best_action(state)
+
+        return action_mask.bit_length() - 1 if action_mask != None else 0b000000000
 
 class PolicyPlayer:
     def __init__(self, policy: dict, agent: Player):
@@ -42,3 +47,12 @@ class PolicyPlayer:
             f"valid={env.valid_moves()}"
         )
         return pos
+
+class MCTSPlayer:
+    def __init__(self):
+        pass
+
+class QLearningPlayer:
+    def __init__(self):
+        pass
+    
