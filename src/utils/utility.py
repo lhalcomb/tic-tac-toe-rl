@@ -87,10 +87,45 @@ def load_policy(path: str) -> dict:
 
     return data
 
+def save_qtable(qtable: dict[tuple[int, int, str], dict], agent: Player, algo: str, gamma: float, eps: float, path: str):
+    encoded_qtable = {}
+
+    for state, action_values in qtable.items():
+        encoded_state = _encode_state(state)
+        encoded_qtable[encoded_state] = {str(action): value for action, value in action_values.items()}
+
+    data = {
+        "agent": SYMBOLS[agent],
+        "mdp_algo": algo,
+        "gamma": gamma,
+        "eps": eps,
+        "qtable": encoded_qtable,
+    }
+
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def load_qtable(path: str) -> dict:
+    with open(path, "r") as f:
+        data = json.load(f)
+
+    decoded_qtable = {}
+    for key_str, action_values in data["qtable"].items():
+        decoded_state = _decode_state(key_str)
+        decoded_qtable[decoded_state] = {int(action_str): value for action_str, value in action_values.items()}
+
+    agent = RV_SYMBOLS[data["agent"]]
+
+    data["qtable"] = decoded_qtable
+    data["agent"] = agent
+
+    return data
 
 if __name__ == "__main__":
-    # for pattern in WINNING_PATTERNS:
-    #     print(f"({pattern}, {pattern : b})", end=", ")
+    for pattern in WINNING_PATTERNS:
+        print(f"({pattern}, {pattern : b})", end=", ")
 
-    # print(RV_SYMBOLS)
-    pass
+    print(RV_SYMBOLS)
+    

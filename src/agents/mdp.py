@@ -105,6 +105,14 @@ class MDP:
 
     def get_discount_factor(self) -> float: #gamma
         return self.gamma
+
+    # public helper
+    def apply_action(self, state: State, action: int):
+        X_mask, O_mask, turn = state
+        mover = self.whose_turn(state)
+        X_after, O_after = (X_mask | action, O_mask) if mover is Player.CROSS else (X_mask, O_mask | action)
+        next_turn = SYMBOLS[Player.NOUGHT] if mover is Player.CROSS else SYMBOLS[Player.CROSS]
+        return (X_after, O_after, next_turn)
     
 
 if __name__ == "__main__":

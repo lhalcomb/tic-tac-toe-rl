@@ -1,6 +1,8 @@
 from src.agents.minimax import MiniMax
 from src.utils.utility import SYMBOLS, Player
 
+import random
+
 ############ Agents Controller Classes ############
 #These control the different agent player logic across the rl algorithms and gameplay.
 
@@ -53,6 +55,24 @@ class MCTSPlayer:
         pass
 
 class QLearningPlayer:
-    def __init__(self):
-        pass
-    
+    def __init__(self, q_table: dict, agent: Player):
+        self.q_table = q_table
+        self.agent = agent
+
+    def get_move(self, env) -> int:
+        state = (env.cross, env.nought, SYMBOLS[env.turn])
+        q_values = self.q_table.get(state)
+
+        if not q_values:
+            # never visited this state during training — fall back to a
+            # legal random move rather than crashing
+            action_mask = random.choice(env.valid_moves and [1 << p for p in env.valid_moves()])
+        else:
+            action_mask = max(q_values, key=q_values.get)
+
+        pos = action_mask.bit_length() - 1
+        assert pos in env.valid_moves(), (
+            f"illegal move: state={state}, action_mask={action_mask}, pos={pos}, "
+            f"valid={env.valid_moves()}"
+        )
+        return pos

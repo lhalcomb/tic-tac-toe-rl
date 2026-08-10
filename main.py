@@ -1,11 +1,15 @@
 import argparse
 from src.agents.players import *
 from src.engine import Environment
-from src.utils.utility import load_policy
+from src.utils.utility import load_policy, load_qtable
 
 def load_policy_player(path: str) -> PolicyPlayer:
     data = load_policy(path)
     return PolicyPlayer(data["policy"], data["agent"])
+
+def load_qtable_player(path: str) -> QLearningPlayer:
+    data = load_qtable(path)
+    return QLearningPlayer(data["qtable"], data["agent"])
 
 if __name__ == "__main__":
     # _ = None
@@ -37,19 +41,23 @@ if __name__ == "__main__":
     vp_o = "/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl/policies/valueiteration_O.json"
     pp_x = "/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl/policies/policyiteration_X.json"
     pp_o = "/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl/policies/policyiteration_O.json"
+    ql_x = "/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl/policies/qlearning_X.json"
+    ql_o = "/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl/policies/qlearning_O.json"
 
-    agent_choices = {"Human": HumanPlayer(), "ValueIteration_X": load_policy_player(vp_x), "ValueIteration_O": load_policy_player(vp_o) , 
-                     "PolicyIteration_X": load_policy_player(pp_x), "PolicyIteration_O": load_policy_player(pp_o), 
-                     "MiniMax_X": MiniMaxPlayer(Player.CROSS), "MiniMax_O": MiniMaxPlayer(Player.NOUGHT)} #, "Q-Learning"
+    agent_factories = {
+    "Human": lambda _: HumanPlayer(),
+    "ValueIteration": lambda agent: load_policy_player(vp_x if agent is Player.CROSS else vp_o),
+    "PolicyIteration": lambda agent: load_policy_player(pp_x if agent is Player.CROSS else pp_o),
+    "MiniMax": lambda agent: MiniMaxPlayer(agent),
+    "QLearning": lambda agent: load_qtable_player(ql_x if agent is Player.CROSS else ql_o)
+    }
 
-    print(f"Aglorithm Choices {list(agent_choices)} ")
-    print("From the list above, choose your player.")
+    print(f"Algorithm choices: {list(agent_factories)}")
+    choice_x = input("Which algorithm is the cross: ")
+    choice_o = input("Which algorithm is the nought: ")
 
-    player_x = input("Which algorithm is the cross: ")
-    player_o = input("Which algorithm is the nought: ")
-
-    player_x = agent_choices[player_x]
-    player_o = agent_choices[player_o]
+    player_x = agent_factories[choice_x](Player.CROSS)
+    player_o = agent_factories[choice_o](Player.NOUGHT)
 
     env = Environment(player_x, player_o)
     env.run()
