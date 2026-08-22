@@ -1,6 +1,7 @@
 ### Utilities used in the tic tac toe logic ###
 import json, os
 from enum import Enum
+from pathlib import Path
 
 ########## ENUMS/STRUCTS ##########
 class Player(Enum):
@@ -71,7 +72,7 @@ def save_policy(policy: dict, agent: Player, algo: str, gamma: float, eps: float
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
 
-def load_policy(path: str) -> dict:
+def load_policy(path: Path) -> dict:
     with open(path, "r") as f:
         data = json.load(f)
 
@@ -107,7 +108,7 @@ def save_qtable(qtable: dict[tuple[int, int, str], dict], agent: Player, algo: s
         json.dump(data, f, indent=2)
 
 
-def load_qtable(path: str) -> dict:
+def load_qtable(path: Path) -> dict:
     with open(path, "r") as f:
         data = json.load(f)
 

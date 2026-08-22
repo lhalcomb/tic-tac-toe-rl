@@ -1,4 +1,5 @@
 from src.agents.minimax import MiniMax
+from src.agents.mcts import MCTS
 from src.utils.utility import SYMBOLS, Player
 
 import random
@@ -51,8 +52,14 @@ class PolicyPlayer:
         return pos
 
 class MCTSPlayer:
-    def __init__(self):
-        pass
+    def __init__(self, agent: Player):
+        self.agent = agent
+        self.mcts = MCTS(self.agent)
+
+    def get_move(self, env) -> int:
+        state = (env.cross, env.nought, SYMBOLS[env.turn])
+        action_mask = self.mcts.search(state)
+        return action_mask.bit_length() - 1 if action_mask != None else 0b000000000
 
 class QLearningPlayer:
     def __init__(self, q_table: dict, agent: Player):

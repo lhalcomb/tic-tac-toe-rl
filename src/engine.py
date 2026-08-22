@@ -18,7 +18,7 @@ class Environment:
     def __str__(self) -> str:
         return self.render(self.cross, self.nought)
 
-    @property #allows me to do Environment.occupied instead of Environment.occupied() or self.occupied instead of making another attribute
+    @property #allows me to do Environment.occupied instead of Environment.occupied() or self.occupied and avoids making another attribute
     def occupied(self) -> int:
         return self.cross | self.nought
     

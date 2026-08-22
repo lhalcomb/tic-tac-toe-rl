@@ -1,5 +1,3 @@
-import sys
-sys.path.append("/Users/laydenhalcomb/TicTacToe/tic-tac-toe-rl")
 from src.utils.utility import Player, WINNING_PATTERNS, FULL_BOARD, SYMBOLS, bits_of,hamWeight
 from collections import deque
 
